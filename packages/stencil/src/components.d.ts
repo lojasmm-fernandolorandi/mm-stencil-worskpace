@@ -6,6 +6,17 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface MmButton {
+        "appearence": string;
+        "text": string;
+    }
+    interface MmModal {
+        "appearence": string;
+        "buttons": string;
+        "closeIcon": string;
+        "header": string;
+        "isopen": boolean;
+    }
     interface MyComponent {
         /**
           * The first name
@@ -21,7 +32,34 @@ export namespace Components {
         "middle": string;
     }
 }
+export interface MmModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMmModalElement;
+}
 declare global {
+    interface HTMLMmButtonElement extends Components.MmButton, HTMLStencilElement {
+    }
+    var HTMLMmButtonElement: {
+        prototype: HTMLMmButtonElement;
+        new (): HTMLMmButtonElement;
+    };
+    interface HTMLMmModalElementEventMap {
+        "action": any;
+    }
+    interface HTMLMmModalElement extends Components.MmModal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLMmModalElementEventMap>(type: K, listener: (this: HTMLMmModalElement, ev: MmModalCustomEvent<HTMLMmModalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLMmModalElementEventMap>(type: K, listener: (this: HTMLMmModalElement, ev: MmModalCustomEvent<HTMLMmModalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLMmModalElement: {
+        prototype: HTMLMmModalElement;
+        new (): HTMLMmModalElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -29,10 +67,24 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "mm-button": HTMLMmButtonElement;
+        "mm-modal": HTMLMmModalElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface MmButton {
+        "appearence"?: string;
+        "text"?: string;
+    }
+    interface MmModal {
+        "appearence"?: string;
+        "buttons"?: string;
+        "closeIcon"?: string;
+        "header"?: string;
+        "isopen"?: boolean;
+        "onAction"?: (event: MmModalCustomEvent<any>) => void;
+    }
     interface MyComponent {
         /**
           * The first name
@@ -48,6 +100,8 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
     interface IntrinsicElements {
+        "mm-button": MmButton;
+        "mm-modal": MmModal;
         "my-component": MyComponent;
     }
 }
@@ -55,6 +109,8 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "mm-button": LocalJSX.MmButton & JSXBase.HTMLAttributes<HTMLMmButtonElement>;
+            "mm-modal": LocalJSX.MmModal & JSXBase.HTMLAttributes<HTMLMmModalElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }
